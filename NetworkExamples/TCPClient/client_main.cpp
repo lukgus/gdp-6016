@@ -73,6 +73,17 @@ int main(int argc, char** argv) {
 		printf("Success!\n");
 	}
 
+	// input output control socket
+	DWORD NonBlock = 1;
+	result = ioctlsocket(connectSocket, FIONBIO, &NonBlock);
+	if (result == SOCKET_ERROR) {
+		printf("ioctlsocket to failed with error: %d\n", WSAGetLastError());
+		closesocket(connectSocket);
+		freeaddrinfo(info);
+		WSACleanup();
+		return 1;
+	}
+
 	// This will wait for the user to press any button to continue
 	system("Pause");
 
@@ -97,17 +108,37 @@ int main(int argc, char** argv) {
 		printf("Sent %d bytes to the server!\n", result);
 	}
 
-	printf("recieve a message from the server . . . ");
-	result = recv(connectSocket, recvBuf, recvBufLen, 0);
-	if (result == SOCKET_ERROR) {
-		printf("recv failed with error: %d\n", WSAGetLastError());
-		closesocket(connectSocket);
-		WSACleanup();
-		return 1;
-	}
-	else {
-		printf("Success!\n");
-		printf("recv %d bytes from the server!\n", result);
+	bool tryAgain = true;
+
+	while (tryAgain)
+	{
+		result = recv(connectSocket, recvBuf, recvBufLen, 0);
+		// Expected result values:
+		// 0 = closed connection, disconnection
+		// >0 = number of bytes received
+		// -1 = SOCKET_ERROR
+		// 
+		// 
+		// NonBlocking recv, it will immediately return
+		//		result will be -1 
+		if (result == SOCKET_ERROR) {
+			if (WSAGetLastError() == WSAEWOULDBLOCK) {
+				printf("WouldBlock!\n");
+				tryAgain = true;
+			}
+			else
+			{
+				printf("recv failed with error: %d\n", WSAGetLastError());
+				closesocket(connectSocket);
+				WSACleanup();
+				return 1;
+			}
+		}
+		else {
+			printf("Success!\n");
+			printf("recv %d bytes from the server!\n", result);
+			tryAgain = false;
+		}
 	}
 
 	// Close

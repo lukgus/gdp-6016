@@ -194,9 +194,18 @@ int main(int argc, char** argv)
 			}
 		}
 
+		// { 1, 2, 3, 4, 5, 6 }
+
+		// 1, 2, 4, 5, 6
+		// 1, 2, 5, 6
+
+		// iterate through the vector BACKWARDS
+
+
 		// Check if any of the currently connected clients have sent
 		// data using send
-		for (int i = 0; i < g_ServerInfo.clients.size(); i++) {
+		//for (int i = 0; i < g_ServerInfo.clients.size(); i++) {
+		for (int i = g_ServerInfo.clients.size() - 1; i >= 0; i--) {
 			ClientInformation& client = g_ServerInfo.clients[i];
 			if (client.connected == false)
 				continue;
