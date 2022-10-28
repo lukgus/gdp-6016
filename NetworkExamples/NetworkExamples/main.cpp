@@ -4,6 +4,68 @@
 // unsigned int		// 4 byte size
 // uint8_t			// 8 bits, 1 byte, unsigned
 
+class Buffer {
+public:
+
+	void WriteUInt32LE(unsigned int value);
+	void WriteUInt16LE(unsigned short value);
+	void WriteUInt8LE(unsigned char value);
+	void WriteInt32LE(int value);
+	void WriteInt16LE(short value);
+	void WriteInt8LE(char value);
+	void WriteString(std::string data);
+
+	unsigned int ReadUInt32LE();
+	unsigned short ReadUInt16LE();
+	unsigned char ReadUInt8LE();
+	int ReadInt32LE();
+	short ReadInt16LE();
+	char ReadInt8LE();
+	std::string ReadString();
+
+
+	std::vector<uint8_t> data;
+};
+
+typedef int SOCKET;
+struct ClientInfo {
+	SOCKET socket;
+	Buffer buffer;
+};
+
+
+
+
+// CLIENT
+Buffer recvBuffer;
+Buffer sendBuffer;
+
+void ReadFromNetwork()
+{
+	// Write to receive buffer
+
+
+}
+
+void HandleUserInput()
+{
+	// Use your send buffer
+
+	std::string message;
+
+	// if hit enter
+	// process message
+}
+
+
+
+
+
+
+
+
+
+
 void WriteUInt32LE(std::vector<uint8_t> &buffer, unsigned int value, int index) {
 	buffer[index] = value;				// x x x O
 	buffer[index + 1] = value >> 8;		// x x O x
