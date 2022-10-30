@@ -9,7 +9,7 @@ void FirstHashLibraryTest()
     std::string salt = "fash9873";
     std::string user_input_password = "top_secret";
     std::string salt_password = salt/*generated*/ + user_input_password;
-    std::string hash = bcrypt::generateHash(salt_password, 12);
+    std::string hash = bcrypt::generateHash(salt_password, 13);
     // Store [ salt | hash ] in the database
 
     // Account Authentication
